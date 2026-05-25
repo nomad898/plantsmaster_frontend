@@ -30,8 +30,10 @@ export interface PagedPlants {
 
 export interface PlantFilters {
   family?: string
-  application?: string
   life_form?: string
+  compounds: string[]
+  applications: string[]
+  locations: string[]
   q?: string
   page: number
   limit: number

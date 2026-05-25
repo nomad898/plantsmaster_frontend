@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { fetchPlants } from '../api'
-import type { PlantBrief, PlantFilters } from '../types'
+import { fetchPlants, getFilterOptions } from '../api'
+import FilterSelect from './FilterSelect'
+import type { PlantBrief } from '../types'
 
-const APP_CODES = ['НМ', 'ВМ', 'ОМ', 'ЗМ', 'ЕМ', 'ЭксП.М']
 const LIFE_FORMS = ['Многолетник', 'Однолетник', 'Двулетник', 'Дерево', 'Кустарник', 'Полукустарник']
 
 interface Props {
@@ -10,68 +10,71 @@ interface Props {
   familyFilter?: string
 }
 
+interface FilterState {
+  family?: string
+  life_form?: string
+  compounds: string[]
+  applications: string[]
+  locations: string[]
+}
+
 export default function PlantList({ onSelect, familyFilter }: Props) {
-  const [filters, setFilters] = useState<PlantFilters>({ page: 1, limit: 20 })
+  const [filters, setFilters] = useState<FilterState>({ compounds: [], applications: [], locations: [] })
   const [items, setItems] = useState<PlantBrief[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [page, setPage] = useState(1)
+  const [filterOptions, setFilterOptions] = useState({ compounds: [] as string[], properties: [] as string[], applications: [] as string[], locations: [] as string[] })
 
+  const limit = 20
+
+  // Load filter options on mount
   useEffect(() => {
-    setFilters(f => ({ ...f, family: familyFilter, page: 1 }))
+    getFilterOptions().then(setFilterOptions)
+  }, [])
+
+  // Update family filter when prop changes
+  useEffect(() => {
+    setFilters(f => ({ ...f, family: familyFilter, compounds: [], applications: [], locations: [] }))
+    setPage(1)
   }, [familyFilter])
 
+  // Fetch plants when filters change
   useEffect(() => {
     setLoading(true)
-    fetchPlants(filters)
+    fetchPlants({ ...filters, page, limit, compounds: filters.compounds, applications: filters.applications, locations: filters.locations })
       .then(d => { setItems(d.items); setTotal(d.total) })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [filters])
+  }, [filters, page])
 
-  const set = (key: keyof PlantFilters, val: string | number | undefined) =>
-    setFilters(f => ({ ...f, [key]: val, page: 1 }))
+  const handleFilterChange = (key: keyof FilterState, value: string | string[] | undefined) => {
+    setFilters(f => ({ ...f, [key]: value }))
+    setPage(1)
+  }
 
-  const totalPages = Math.ceil(total / filters.limit)
+  const totalPages = Math.ceil(total / limit)
 
   return (
     <div className="flex h-full gap-4">
       {/* Sidebar filters */}
-      <aside className="w-52 shrink-0 space-y-5">
+      <aside className="w-52 shrink-0 space-y-5 overflow-y-auto">
         <div>
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Семейство</label>
           <input
             type="text"
             value={filters.family ?? ''}
-            onChange={e => set('family', e.target.value || undefined)}
+            onChange={e => handleFilterChange('family', e.target.value || undefined)}
             placeholder="Apiaceae…"
             className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-sm outline-none focus:border-forest-500"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Применение</label>
-          <div className="flex flex-wrap gap-1">
-            {APP_CODES.map(code => (
-              <button
-                key={code}
-                onClick={() => set('application', filters.application === code ? undefined : code)}
-                className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition ${
-                  filters.application === code
-                    ? 'bg-forest-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-forest-100'
-                }`}
-              >
-                {code}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Жизненная форма</label>
           <select
             value={filters.life_form ?? ''}
-            onChange={e => set('life_form', e.target.value || undefined)}
+            onChange={e => handleFilterChange('life_form', e.target.value || undefined)}
             className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-sm outline-none focus:border-forest-500"
           >
             <option value="">Все</option>
@@ -79,56 +82,94 @@ export default function PlantList({ onSelect, familyFilter }: Props) {
           </select>
         </div>
 
+        <FilterSelect
+          label="Состав"
+          options={filterOptions.compounds}
+          selected={filters.compounds}
+          onChange={(v) => handleFilterChange('compounds', v)}
+        />
+
+        <FilterSelect
+          label="Применение"
+          options={filterOptions.applications}
+          selected={filters.applications}
+          onChange={(v) => handleFilterChange('applications', v)}
+        />
+
+        <FilterSelect
+          label="Местоположение"
+          options={filterOptions.locations}
+          selected={filters.locations}
+          onChange={(v) => handleFilterChange('locations', v)}
+        />
+
         <div className="pt-1 text-xs text-gray-400">
           Найдено: <span className="font-semibold text-gray-600">{total}</span>
         </div>
       </aside>
 
-      {/* Plant cards */}
-      <div className="flex flex-1 flex-col gap-3 overflow-y-auto">
+      {/* Plant cards grid */}
+      <div className="flex flex-1 flex-col gap-4">
         {loading && <p className="py-8 text-center text-sm text-gray-400">Загрузка…</p>}
         {!loading && items.length === 0 && (
           <p className="py-8 text-center text-sm text-gray-400">Ничего не найдено</p>
         )}
-        {items.map(p => (
-          <div
-            key={p.id}
-            onClick={() => onSelect(p)}
-            className="cursor-pointer rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition hover:border-forest-300 hover:shadow-md"
-          >
-            <p className="font-semibold italic text-forest-700">{p.name_la}</p>
-            {p.name_ru && <p className="mt-0.5 text-sm text-gray-700">{p.name_ru}</p>}
-            {p.name_kz && <p className="text-xs text-gray-400">{p.name_kz}</p>}
-            <div className="mt-2 flex flex-wrap gap-1">
-              {p.family && (
-                <span className="rounded-full bg-forest-50 px-2 py-0.5 text-xs text-forest-700">{p.family}</span>
-              )}
-              {p.life_form && (
-                <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">{p.life_form}</span>
-              )}
+        {!loading && items.length > 0 && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto flex-1">
+              {items.map(p => (
+                <div
+                  key={p.id}
+                  onClick={() => onSelect(p)}
+                  className="cursor-pointer rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition flex flex-col"
+                >
+                  {/* Image placeholder */}
+                  <div className="bg-gradient-to-br from-forest-100 to-forest-50 h-40 flex items-center justify-center text-forest-300">
+                    <span className="text-4xl">🌿</span>
+                  </div>
+                  {/* Card content */}
+                  <div className="p-4 flex flex-col gap-2">
+                    <p className="font-bold italic text-forest-800 text-sm leading-tight">{p.name_la}</p>
+                    {p.name_ru && <p className="text-xs text-gray-700">{p.name_ru}</p>}
+                    {p.name_kz && <p className="text-xs text-gray-500">{p.name_kz}</p>}
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {p.family && (
+                        <span className="rounded-full bg-forest-50 px-2 py-0.5 text-xs text-forest-700 border border-forest-200">
+                          {p.family}
+                        </span>
+                      )}
+                      {p.life_form && (
+                        <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-700 border border-blue-200">
+                          {p.life_form}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-        ))}
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 py-3">
-            <button
-              disabled={filters.page <= 1}
-              onClick={() => setFilters(f => ({ ...f, page: f.page - 1 }))}
-              className="rounded-lg border px-3 py-1.5 text-sm disabled:opacity-40 hover:bg-gray-50"
-            >
-              ←
-            </button>
-            <span className="text-sm text-gray-500">{filters.page} / {totalPages}</span>
-            <button
-              disabled={filters.page >= totalPages}
-              onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))}
-              className="rounded-lg border px-3 py-1.5 text-sm disabled:opacity-40 hover:bg-gray-50"
-            >
-              →
-            </button>
-          </div>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 py-3">
+                <button
+                  disabled={page <= 1}
+                  onClick={() => setPage(p => p - 1)}
+                  className="rounded-lg border px-3 py-1.5 text-sm disabled:opacity-40 hover:bg-gray-50"
+                >
+                  ←
+                </button>
+                <span className="text-sm text-gray-500">{page} / {totalPages}</span>
+                <button
+                  disabled={page >= totalPages}
+                  onClick={() => setPage(p => p + 1)}
+                  className="rounded-lg border px-3 py-1.5 text-sm disabled:opacity-40 hover:bg-gray-50"
+                >
+                  →
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
