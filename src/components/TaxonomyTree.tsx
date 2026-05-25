@@ -25,12 +25,15 @@ export default function TaxonomyTree({ onFamilySelect }: Props) {
   const [loading, setLoading] = useState(true)
   const [expandedFamilies, setExpandedFamilies] = useState<Set<string>>(new Set())
   const dataRef = useRef<{ taxa: TaxonomyItem[]; plants: any[] } | null>(null)
+  const allNodesRef = useRef<Node[]>([])
+  const allEdgesRef = useRef<Edge[]>([])
 
   useEffect(() => {
     Promise.all([fetchTaxonomy(), loadPlants()])
       .then(([taxa, plants]) => {
         dataRef.current = { taxa: taxa as any[], plants: plants as any[] }
-        buildGraph(taxa as any[], plants as any[], new Set())
+        // Build all possible nodes/edges upfront with all positions calculated
+        buildFullGraph(taxa as any[], plants as any[])
         setLoading(false)
       })
       .catch(err => {
@@ -39,17 +42,38 @@ export default function TaxonomyTree({ onFamilySelect }: Props) {
       })
   }, [])
 
-  // Rebuild graph when expandedFamilies changes
+  // When expanded families change, just filter which nodes to show
   useEffect(() => {
-    if (dataRef.current) {
-      buildGraph(dataRef.current.taxa, dataRef.current.plants, expandedFamilies)
-    }
-  }, [expandedFamilies])
+    if (allNodesRef.current.length > 0) {
+      const visibleNodes = allNodesRef.current.filter(node => {
+        if (node.id === ROOT_ID || node.id.startsWith('family-')) {
+          return true
+        }
+        // Show life_form and plant nodes only if their parent family is expanded
+        const familyName = (node.data as any).familyName
+        if (familyName) {
+          return expandedFamilies.has(familyName)
+        }
+        return true
+      })
 
-  const buildGraph = (taxa: TaxonomyItem[], allPlants: any[], expanded: Set<string>) => {
+      const visibleNodeIds = new Set(visibleNodes.map(n => n.id))
+      const visibleEdges = allEdgesRef.current.filter(
+        edge => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target)
+      )
+
+      setNodes(visibleNodes)
+      setEdges(visibleEdges)
+    }
+  }, [expandedFamilies, setNodes, setEdges])
+
+  const buildFullGraph = (taxa: TaxonomyItem[], allPlants: any[]) => {
     const COLS = 6
     const COL_W = 200
     const ROW_H = 90
+
+    const allNodes: Node[] = []
+    const allEdges: Edge[] = []
 
     const root: Node = {
       id: ROOT_ID,
@@ -64,9 +88,7 @@ export default function TaxonomyTree({ onFamilySelect }: Props) {
         border: 'none',
       },
     }
-
-    const allNodes: Node[] = [root]
-    const allEdges: Edge[] = []
+    allNodes.push(root)
 
     // Group plants by family → life_form
     const familyGroups: Record<string, Record<string, any[]>> = {}
@@ -78,14 +100,17 @@ export default function TaxonomyTree({ onFamilySelect }: Props) {
       familyGroups[fam][lf].push(p)
     })
 
-    // Create family nodes
+    // Create ALL nodes and edges upfront (both visible and hidden)
     taxa.forEach((t: TaxonomyItem, familyIdx: number) => {
       const familyNodeId = `family-${t.id}`
+
+      // Family node
       allNodes.push({
         id: familyNodeId,
         data: {
           label: `${t.name_la}\n(${t.plant_count})`,
           family: t.name_la,
+          familyName: t.name_la,
         },
         position: { x: (familyIdx % COLS) * COL_W, y: Math.floor(familyIdx / COLS) * ROW_H + ROW_H },
         style: {
@@ -106,74 +131,83 @@ export default function TaxonomyTree({ onFamilySelect }: Props) {
         style: { stroke: '#bbf7d0' },
       })
 
-      // Create life_form and plant nodes only if family is expanded
-      if (expanded.has(t.name_la)) {
-        const lifeFormGroup = familyGroups[t.name_la] || {}
-        let lifeFormY = Math.floor(familyIdx / COLS) * ROW_H + ROW_H * 2
+      // Create life_form and plant nodes for this family (they'll be hidden/shown via visibility)
+      const lifeFormGroup = familyGroups[t.name_la] || {}
+      let lifeFormY = Math.floor(familyIdx / COLS) * ROW_H + ROW_H * 2
 
-        Object.entries(lifeFormGroup).forEach(([lifeForm, plants]: [string, any[]], lifeFormIdx: number) => {
-          const lifeFormNodeId = `lf-${t.id}-${lifeFormIdx}`
+      Object.entries(lifeFormGroup).forEach(([lifeForm, plants]: [string, any[]], lifeFormIdx: number) => {
+        const lifeFormNodeId = `lf-${t.id}-${lifeFormIdx}`
 
+        allNodes.push({
+          id: lifeFormNodeId,
+          data: {
+            label: lifeForm,
+            familyName: t.name_la,
+          },
+          position: {
+            x: (familyIdx % COLS) * COL_W - 60 + lifeFormIdx * 40,
+            y: lifeFormY,
+          },
+          style: {
+            background: '#dcfce7',
+            border: '1px solid #86efac',
+            borderRadius: 6,
+            fontSize: 9,
+            padding: '4px 8px',
+            whiteSpace: 'nowrap' as const,
+          },
+        })
+
+        allEdges.push({
+          id: `e-family-${t.id}-${lifeFormIdx}`,
+          source: familyNodeId,
+          target: lifeFormNodeId,
+          style: { stroke: '#86efac' },
+        })
+
+        // Create plant leaf nodes
+        plants.slice(0, 3).forEach((plant: any, plantIdx: number) => {
+          const plantNodeId = `plant-${plant.id}`
           allNodes.push({
-            id: lifeFormNodeId,
-            data: { label: lifeForm },
+            id: plantNodeId,
+            data: {
+              label: plant.name_la,
+              familyName: t.name_la,
+            },
             position: {
-              x: (familyIdx % COLS) * COL_W - 60 + lifeFormIdx * 40,
-              y: lifeFormY,
+              x: (familyIdx % COLS) * COL_W - 40 + plantIdx * 40,
+              y: lifeFormY + 60,
             },
             style: {
-              background: '#dcfce7',
-              border: '1px solid #86efac',
-              borderRadius: 6,
-              fontSize: 9,
-              padding: '4px 8px',
+              background: '#f3f4f6',
+              border: '1px solid #d1d5db',
+              borderRadius: 4,
+              fontSize: 8,
+              padding: '3px 6px',
               whiteSpace: 'nowrap' as const,
+              cursor: 'pointer',
             },
           })
 
           allEdges.push({
-            id: `e-family-${t.id}-${lifeFormIdx}`,
-            source: familyNodeId,
-            target: lifeFormNodeId,
-            style: { stroke: '#86efac' },
+            id: `e-lf-${plant.id}`,
+            source: lifeFormNodeId,
+            target: plantNodeId,
+            style: { stroke: '#d1d5db' },
           })
-
-          // Create plant leaf nodes
-          plants.slice(0, 3).forEach((plant: any, plantIdx: number) => {
-            const plantNodeId = `plant-${plant.id}`
-            allNodes.push({
-              id: plantNodeId,
-              data: { label: plant.name_la },
-              position: {
-                x: (familyIdx % COLS) * COL_W - 40 + plantIdx * 40,
-                y: lifeFormY + 60,
-              },
-              style: {
-                background: '#f3f4f6',
-                border: '1px solid #d1d5db',
-                borderRadius: 4,
-                fontSize: 8,
-                padding: '3px 6px',
-                whiteSpace: 'nowrap' as const,
-                cursor: 'pointer',
-              },
-            })
-
-            allEdges.push({
-              id: `e-lf-${plant.id}`,
-              source: lifeFormNodeId,
-              target: plantNodeId,
-              style: { stroke: '#d1d5db' },
-            })
-          })
-
-          lifeFormY += 100
         })
-      }
+
+        lifeFormY += 100
+      })
     })
 
-    setNodes(allNodes)
-    setEdges(allEdges)
+    // Store full graph and set initial visibility (only families visible)
+    allNodesRef.current = allNodes
+    allEdgesRef.current = allEdges
+    const initialVisibleNodes = allNodes.filter(n => n.id === ROOT_ID || n.id.startsWith('family-'))
+    const initialEdges = allEdges.filter(e => e.source === ROOT_ID || e.source.startsWith('family-'))
+    setNodes(initialVisibleNodes)
+    setEdges(initialEdges)
   }
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
@@ -219,8 +253,8 @@ export default function TaxonomyTree({ onFamilySelect }: Props) {
         <Controls />
         <MiniMap nodeStrokeWidth={3} />
       </ReactFlow>
-      <p className="absolute bottom-14 left-4 rounded bg-white/90 px-2.5 py-1.5 text-xs text-gray-600 shadow-md z-50 pointer-events-none">
-        Клик на семейство → раскрыть, клик на растение → выбрать
+      <p className="absolute bottom-4 right-4 rounded bg-white/90 px-2.5 py-1.5 text-xs text-gray-600 shadow-md z-50 pointer-events-none max-w-xs text-right">
+        Клик на семейство → раскрыть
       </p>
     </div>
   )
