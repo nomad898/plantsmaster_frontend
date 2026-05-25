@@ -18,10 +18,17 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('search')
   const [selectedPlant, setSelectedPlant] = useState<PlantBrief | null>(null)
   const [familyFilter, setFamilyFilter] = useState<string | undefined>()
+  const [searchQuery, setSearchQuery] = useState<string>('')
 
   const handleFamilySelect = (family: string) => {
     setFamilyFilter(family)
+    setSearchQuery('')
     setTab('search')
+  }
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+    setFamilyFilter(undefined)
   }
 
   return (
@@ -36,7 +43,7 @@ export default function App() {
           </div>
         </div>
         <div className="flex-1">
-          <Omnibox onSelect={p => { setSelectedPlant(p); setTab('search') }} />
+          <Omnibox onSelect={p => { setSelectedPlant(p); setTab('search'); setSearchQuery('') }} onSearch={handleSearch} />
         </div>
       </header>
 
@@ -76,6 +83,7 @@ export default function App() {
           <PlantList
             onSelect={setSelectedPlant}
             familyFilter={familyFilter}
+            searchQuery={searchQuery}
           />
         )}
         {tab === 'taxonomy' && (

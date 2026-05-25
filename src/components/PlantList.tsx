@@ -8,6 +8,7 @@ const LIFE_FORMS = ['Многолетник', 'Однолетник', 'Двул�
 interface Props {
   onSelect: (plant: PlantBrief) => void
   familyFilter?: string
+  searchQuery?: string
 }
 
 interface FilterState {
@@ -18,7 +19,7 @@ interface FilterState {
   locations: string[]
 }
 
-export default function PlantList({ onSelect, familyFilter }: Props) {
+export default function PlantList({ onSelect, familyFilter, searchQuery = '' }: Props) {
   const [filters, setFilters] = useState<FilterState>({ compounds: [], applications: [], locations: [] })
   const [items, setItems] = useState<PlantBrief[]>([])
   const [total, setTotal] = useState(0)
@@ -38,6 +39,12 @@ export default function PlantList({ onSelect, familyFilter }: Props) {
     setFilters(f => ({ ...f, family: familyFilter, compounds: [], applications: [], locations: [] }))
     setPage(1)
   }, [familyFilter])
+
+  // Update search query when prop changes
+  useEffect(() => {
+    setFilters(f => ({ ...f, q: searchQuery }))
+    setPage(1)
+  }, [searchQuery])
 
   // Fetch plants when filters change
   useEffect(() => {

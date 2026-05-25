@@ -219,7 +219,7 @@ export default function TaxonomyTree({ onFamilySelect }: Props) {
         <Controls />
         <MiniMap nodeStrokeWidth={3} />
       </ReactFlow>
-      <p className="absolute bottom-14 left-4 rounded bg-white/80 px-2 py-1 text-xs text-gray-400 shadow">
+      <p className="absolute bottom-14 left-4 rounded bg-white/90 px-2.5 py-1.5 text-xs text-gray-600 shadow-md z-50 pointer-events-none">
         Клик на семейство → раскрыть, клик на растение → выбрать
       </p>
     </div>

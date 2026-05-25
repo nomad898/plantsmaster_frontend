@@ -4,9 +4,10 @@ import type { PlantBrief } from '../types'
 
 interface Props {
   onSelect: (plant: PlantBrief) => void
+  onSearch: (query: string) => void
 }
 
-export default function Omnibox({ onSelect }: Props) {
+export default function Omnibox({ onSelect, onSearch }: Props) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<PlantBrief[]>([])
   const [open, setOpen] = useState(false)
@@ -15,13 +16,14 @@ export default function Omnibox({ onSelect }: Props) {
 
   useEffect(() => {
     if (timer.current) clearTimeout(timer.current)
-    if (!query.trim()) { setResults([]); setOpen(false); return }
+    if (!query.trim()) { setResults([]); setOpen(false); onSearch(''); return }
     timer.current = setTimeout(async () => {
       const hits = await searchPlants(query, 8).catch(() => [])
       setResults(hits)
       setOpen(hits.length > 0)
+      onSearch(query)
     }, 300)
-  }, [query])
+  }, [query, onSearch])
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -34,6 +36,7 @@ export default function Omnibox({ onSelect }: Props) {
   const pick = (plant: PlantBrief) => {
     setQuery('')
     setOpen(false)
+    onSearch('')
     onSelect(plant)
   }
 
@@ -43,7 +46,7 @@ export default function Omnibox({ onSelect }: Props) {
         type="text"
         value={query}
         onChange={e => setQuery(e.target.value)}
-        placeholder="Поиск растения (лат., рус., каз.)…"
+        placeholder="Поиск растения (лат., рус., каз., состав…)"
         className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm outline-none focus:border-forest-500 focus:ring-2 focus:ring-forest-100"
       />
       {open && (
