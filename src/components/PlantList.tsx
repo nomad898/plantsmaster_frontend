@@ -108,43 +108,50 @@ export default function PlantList({ onSelect, familyFilter }: Props) {
         </div>
       </aside>
 
-      {/* Plant cards grid */}
-      <div className="flex flex-1 flex-col gap-4">
+      {/* Plant cards - single row list */}
+      <div className="flex flex-1 flex-col gap-3">
         {loading && <p className="py-8 text-center text-sm text-gray-400">Загрузка…</p>}
         {!loading && items.length === 0 && (
           <p className="py-8 text-center text-sm text-gray-400">Ничего не найдено</p>
         )}
         {!loading && items.length > 0 && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto flex-1">
+            <div className="space-y-2 overflow-y-auto flex-1">
               {items.map(p => (
                 <div
                   key={p.id}
                   onClick={() => onSelect(p)}
-                  className="cursor-pointer rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition flex flex-col"
+                  className="cursor-pointer rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md hover:border-forest-300 transition flex items-center gap-4 p-4"
                 >
                   {/* Image placeholder */}
-                  <div className="bg-gradient-to-br from-forest-100 to-forest-50 h-40 flex items-center justify-center text-forest-300">
-                    <span className="text-4xl">🌿</span>
+                  <div className="bg-gradient-to-br from-forest-100 to-forest-50 rounded-lg h-24 w-24 flex items-center justify-center text-forest-300 flex-shrink-0">
+                    <span className="text-3xl">🌿</span>
                   </div>
-                  {/* Card content */}
-                  <div className="p-4 flex flex-col gap-2">
-                    <p className="font-bold italic text-forest-800 text-sm leading-tight">{p.name_la}</p>
-                    {p.name_ru && <p className="text-xs text-gray-700">{p.name_ru}</p>}
-                    {p.name_kz && <p className="text-xs text-gray-500">{p.name_kz}</p>}
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {p.family && (
-                        <span className="rounded-full bg-forest-50 px-2 py-0.5 text-xs text-forest-700 border border-forest-200">
-                          {p.family}
+
+                  {/* Plant info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <p className="font-bold italic text-forest-800 text-base">{p.name_la}</p>
+                      {p.family && <span className="text-xs text-gray-500">({p.family})</span>}
+                    </div>
+                    {p.name_ru && <p className="text-sm text-gray-700 mb-0.5">{p.name_ru}</p>}
+                    {p.name_kz && <p className="text-xs text-gray-500 mb-2">{p.name_kz}</p>}
+                    <div className="flex flex-wrap gap-2">
+                      {p.life_form && (
+                        <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs text-blue-700 border border-blue-200">
+                          {p.life_form}
                         </span>
                       )}
-                      {p.life_form && (
-                        <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-700 border border-blue-200">
-                          {p.life_form}
+                      {p.family && (
+                        <span className="rounded-full bg-forest-50 px-2.5 py-0.5 text-xs text-forest-700 border border-forest-200">
+                          {p.family}
                         </span>
                       )}
                     </div>
                   </div>
+
+                  {/* Right arrow indicator */}
+                  <div className="text-gray-400 text-xl flex-shrink-0">→</div>
                 </div>
               ))}
             </div>

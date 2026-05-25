@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import {
   ReactFlow,
   Background,
@@ -24,14 +24,29 @@ export default function TaxonomyTree({ onFamilySelect }: Props) {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
   const [loading, setLoading] = useState(true)
   const [expandedFamilies, setExpandedFamilies] = useState<Set<string>>(new Set())
+  const dataRef = useRef<{ taxa: TaxonomyItem[]; plants: any[] } | null>(null)
 
   useEffect(() => {
     Promise.all([fetchTaxonomy(), loadPlants()])
-      .then(([taxa, plants]) => buildGraph(taxa, plants as any[]))
-      .finally(() => setLoading(false))
+      .then(([taxa, plants]) => {
+        dataRef.current = { taxa: taxa as any[], plants: plants as any[] }
+        buildGraph(taxa as any[], plants as any[], new Set())
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Failed to load taxonomy:', err)
+        setLoading(false)
+      })
   }, [])
 
-  const buildGraph = (taxa: TaxonomyItem[], allPlants: any[]) => {
+  // Rebuild graph when expandedFamilies changes
+  useEffect(() => {
+    if (dataRef.current) {
+      buildGraph(dataRef.current.taxa, dataRef.current.plants, expandedFamilies)
+    }
+  }, [expandedFamilies])
+
+  const buildGraph = (taxa: TaxonomyItem[], allPlants: any[], expanded: Set<string>) => {
     const COLS = 6
     const COL_W = 200
     const ROW_H = 90
@@ -92,7 +107,7 @@ export default function TaxonomyTree({ onFamilySelect }: Props) {
       })
 
       // Create life_form and plant nodes only if family is expanded
-      if (expandedFamilies.has(t.name_la)) {
+      if (expanded.has(t.name_la)) {
         const lifeFormGroup = familyGroups[t.name_la] || {}
         let lifeFormY = Math.floor(familyIdx / COLS) * ROW_H + ROW_H * 2
 
