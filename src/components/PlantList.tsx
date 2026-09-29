@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetchPlants, getFilterOptions } from '../api'
+import { fetchPlants, getFilterOptions, loadExternalPlantInfo } from '../api'
 import FilterSelect from './FilterSelect'
 import type { PlantBrief } from '../types'
 
@@ -14,18 +14,29 @@ interface Props {
 interface FilterState {
   family?: string
   life_form?: string
+  raw_materials: string[]
   compounds: string[]
+  properties: string[]
+  applications: string[]
+  locations: string[]
+  q?: string
+}
+
+interface FilterOptionsState {
+  raw_materials: string[]
+  compounds: string[]
+  properties: string[]
   applications: string[]
   locations: string[]
 }
 
 export default function PlantList({ onSelect, familyFilter, searchQuery = '' }: Props) {
-  const [filters, setFilters] = useState<FilterState>({ compounds: [], applications: [], locations: [] })
+  const [filters, setFilters] = useState<FilterState>({ raw_materials: [], compounds: [], properties: [], applications: [], locations: [] })
   const [items, setItems] = useState<PlantBrief[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
-  const [filterOptions, setFilterOptions] = useState({ compounds: [] as string[], properties: [] as string[], applications: [] as string[], locations: [] as string[] })
+  const [filterOptions, setFilterOptions] = useState<FilterOptionsState>({ raw_materials: [], compounds: [], properties: [], applications: [], locations: [] })
 
   const limit = 20
 
@@ -36,7 +47,7 @@ export default function PlantList({ onSelect, familyFilter, searchQuery = '' }: 
 
   // Update family filter when prop changes
   useEffect(() => {
-    setFilters(f => ({ ...f, family: familyFilter, compounds: [], applications: [], locations: [] }))
+    setFilters(f => ({ ...f, family: familyFilter, raw_materials: [], compounds: [], properties: [], applications: [], locations: [] }))
     setPage(1)
   }, [familyFilter])
 
@@ -49,7 +60,7 @@ export default function PlantList({ onSelect, familyFilter, searchQuery = '' }: 
   // Fetch plants when filters change
   useEffect(() => {
     setLoading(true)
-    fetchPlants({ ...filters, page, limit, compounds: filters.compounds, applications: filters.applications, locations: filters.locations })
+    fetchPlants({ ...filters, page, limit, raw_materials: filters.raw_materials, compounds: filters.compounds, properties: filters.properties, applications: filters.applications, locations: filters.locations })
       .then(d => { setItems(d.items); setTotal(d.total) })
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -90,10 +101,24 @@ export default function PlantList({ onSelect, familyFilter, searchQuery = '' }: 
         </div>
 
         <FilterSelect
+          label="Сырьё"
+          options={filterOptions.raw_materials}
+          selected={filters.raw_materials}
+          onChange={(v) => handleFilterChange('raw_materials', v)}
+        />
+
+        <FilterSelect
           label="Состав"
           options={filterOptions.compounds}
           selected={filters.compounds}
           onChange={(v) => handleFilterChange('compounds', v)}
+        />
+
+        <FilterSelect
+          label="Свойства"
+          options={filterOptions.properties}
+          selected={filters.properties}
+          onChange={(v) => handleFilterChange('properties', v)}
         />
 
         <FilterSelect
@@ -130,10 +155,7 @@ export default function PlantList({ onSelect, familyFilter, searchQuery = '' }: 
                   onClick={() => onSelect(p)}
                   className="cursor-pointer rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md hover:border-forest-300 transition flex items-center gap-4 p-4"
                 >
-                  {/* Image placeholder */}
-                  <div className="bg-gradient-to-br from-forest-100 to-forest-50 rounded-lg h-24 w-24 flex items-center justify-center text-forest-300 flex-shrink-0">
-                    <span className="text-3xl">🌿</span>
-                  </div>
+                  <PlantThumbnail plant={p} />
 
                   {/* Plant info */}
                   <div className="flex-1 min-w-0">
@@ -188,4 +210,22 @@ export default function PlantList({ onSelect, familyFilter, searchQuery = '' }: 
       </div>
     </div>
   )
+}
+
+function PlantThumbnail({ plant }: { plant: PlantBrief }) {
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>()
+
+  useEffect(() => {
+    let active = true
+    loadExternalPlantInfo(plant).then(reference => {
+      if (active) setThumbnailUrl(reference?.thumbnailUrl)
+    })
+    return () => { active = false }
+  }, [plant.id, plant.name_la])
+
+  if (!thumbnailUrl) {
+    return <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-forest-100 to-forest-50 text-forest-300" aria-label="Миниатюра недоступна"><span className="text-3xl">🌿</span></div>
+  }
+
+  return <img src={thumbnailUrl} alt={`Внешняя иллюстрация: ${plant.name_la}`} loading="lazy" className="h-24 w-24 flex-shrink-0 rounded-lg bg-forest-50 object-cover" />
 }

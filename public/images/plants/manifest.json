@@ -1,0 +1,245 @@
+{
+  "1": {
+    "plantId": 1,
+    "scientificName": "Acer tataricum",
+    "localUrl": "./images/plants/1.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Acer_tataricum",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.385Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "2": {
+    "plantId": 2,
+    "scientificName": "Adiantum capillus-veneris",
+    "localUrl": "./images/plants/2.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Adiantum_capillus-veneris",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.386Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "3": {
+    "plantId": 3,
+    "scientificName": "Adoxa moschatellina",
+    "localUrl": "./images/plants/3.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Adoxa_moschatellina",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.387Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "4": {
+    "plantId": 4,
+    "scientificName": "Alisma plantago-aquatica",
+    "localUrl": "./images/plants/4.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Alisma_plantago-aquatica",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.387Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "5": {
+    "plantId": 5,
+    "scientificName": "Sagittaria sagittifolia",
+    "localUrl": "./images/plants/5.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Sagittaria_sagittifolia",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.387Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "6": {
+    "plantId": 6,
+    "scientificName": "Sagittaria trifolia",
+    "localUrl": "./images/plants/6.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Sagittaria_trifolia",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.387Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "7": {
+    "plantId": 7,
+    "scientificName": "Allium altaicum",
+    "localUrl": "./images/plants/7.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_altaicum",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.387Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "8": {
+    "plantId": 8,
+    "scientificName": "Allium altissimum",
+    "localUrl": "./images/plants/8.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_altissimum",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.387Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "9": {
+    "plantId": 9,
+    "scientificName": "Allium karataviense",
+    "localUrl": "./images/plants/9.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_karataviense",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.387Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "10": {
+    "plantId": 10,
+    "scientificName": "Allium ledebourianum",
+    "localUrl": "./images/plants/10.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_ledebourianum",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-28T13:24:32.387Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "11": {
+    "plantId": 11,
+    "scientificName": "Allium longicuspis",
+    "localUrl": "./images/plants/11.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_longicuspis",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.715Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "12": {
+    "plantId": 12,
+    "scientificName": "Allium microdictyon",
+    "localUrl": "./images/plants/12.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_microdictyon",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.719Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "13": {
+    "plantId": 13,
+    "scientificName": "Allium nutans",
+    "localUrl": "./images/plants/13.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_nutans",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.719Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "14": {
+    "plantId": 14,
+    "scientificName": "Allium obliquum",
+    "localUrl": "./images/plants/14.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_obliquum",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.720Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "15": {
+    "plantId": 15,
+    "scientificName": "Allium pskemense",
+    "localUrl": "./images/plants/15.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_pskemense",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.722Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "16": {
+    "plantId": 16,
+    "scientificName": "Allium ramosum",
+    "localUrl": "./images/plants/16.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_ramosum",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.723Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "17": {
+    "plantId": 17,
+    "scientificName": "Allium schoenoprasum",
+    "localUrl": "./images/plants/17.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_schoenoprasum",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.723Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "18": {
+    "plantId": 18,
+    "scientificName": "Allium suworowii",
+    "localUrl": "./images/plants/18.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Allium_suworowii",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.723Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "19": {
+    "plantId": 19,
+    "scientificName": "Amaranthus blitoides",
+    "localUrl": "./images/plants/19.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Amaranthus_blitoides",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.723Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "20": {
+    "plantId": 20,
+    "scientificName": "Amaranthus blitum",
+    "localUrl": "./images/plants/20.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Amaranthus_blitum",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.724Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "22": {
+    "plantId": 22,
+    "scientificName": "Amaranthus retroflexus",
+    "localUrl": "./images/plants/22.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Amaranthus_retroflexus",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.731Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "31": {
+    "plantId": 31,
+    "scientificName": "Anthriscus sylvestris",
+    "localUrl": "./images/plants/31.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Anthriscus_sylvestris",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.742Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "32": {
+    "plantId": 32,
+    "scientificName": "Berula erecta",
+    "localUrl": "./images/plants/32.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Berula_erecta",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.742Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "38": {
+    "plantId": 38,
+    "scientificName": "Carum carvi",
+    "localUrl": "./images/plants/38.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Carum_carvi",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.745Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "39": {
+    "plantId": 39,
+    "scientificName": "Cicuta virosa",
+    "localUrl": "./images/plants/39.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Cicuta_virosa",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.746Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "40": {
+    "plantId": 40,
+    "scientificName": "Conioselinum tataricum",
+    "localUrl": "./images/plants/40.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Conioselinum_tataricum",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.746Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  },
+  "55": {
+    "plantId": 55,
+    "scientificName": "Ferula foetida",
+    "localUrl": "./images/plants/55.jpg",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Ferula_foetida",
+    "source": "Wikipedia",
+    "retrievedAt": "2026-09-29T00:00:22.759Z",
+    "license": "See the original Wikipedia/Wikimedia Commons page before publication"
+  }
+}

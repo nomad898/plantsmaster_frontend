@@ -4,14 +4,16 @@ import PlantList from './components/PlantList'
 import PlantDetail from './components/PlantDetail'
 import TaxonomyTree from './components/TaxonomyTree'
 import MapView from './components/MapView'
+import RejectedRecords from './components/RejectedRecords'
 import type { PlantBrief } from './types'
 
-type Tab = 'search' | 'taxonomy' | 'map'
+type Tab = 'search' | 'taxonomy' | 'map' | 'rejected'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'search',   label: 'Поиск',      icon: '🔍' },
   { id: 'taxonomy', label: 'Таксономия', icon: '🌳' },
   { id: 'map',      label: 'Карта',      icon: '🗺️' },
+  { id: 'rejected', label: 'Отброшенные данные', icon: '⚠️' },
 ]
 
 export default function App() {
@@ -19,12 +21,6 @@ export default function App() {
   const [selectedPlant, setSelectedPlant] = useState<PlantBrief | null>(null)
   const [familyFilter, setFamilyFilter] = useState<string | undefined>()
   const [searchQuery, setSearchQuery] = useState<string>('')
-
-  const handleFamilySelect = (family: string) => {
-    setFamilyFilter(family)
-    setSearchQuery('')
-    setTab('search')
-  }
 
   const handleSearch = (query: string) => {
     setSearchQuery(query)
@@ -88,10 +84,11 @@ export default function App() {
         )}
         {tab === 'taxonomy' && (
           <div className="relative h-full">
-            <TaxonomyTree onFamilySelect={handleFamilySelect} />
+            <TaxonomyTree onPlantSelect={setSelectedPlant} />
           </div>
         )}
-        {tab === 'map' && <MapView />}
+        {tab === 'map' && <MapView onPlantSelect={setSelectedPlant} />}
+        {tab === 'rejected' && <RejectedRecords />}
       </main>
 
       {/* Plant detail drawer */}

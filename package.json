@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "cache:wikipedia-images": "node scripts/cache-wikipedia-images.mjs",
+    "cache:reconcile-wikipedia-images": "node scripts/cache-wikipedia-images.mjs --reconcile-only",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist"
   },

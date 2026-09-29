@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchPlant } from '../api'
+import { fetchPlant, loadExternalPlantInfo } from '../api'
 import type { PlantBrief, PlantDetail as PlantDetailType } from '../types'
 
 interface Props {
@@ -10,14 +10,17 @@ interface Props {
 export default function PlantDetail({ plant, onClose }: Props) {
   const [detail, setDetail] = useState<PlantDetailType | null>(null)
   const [loading, setLoading] = useState(true)
+  const [external, setExternal] = useState<PlantDetailType['externalReference']>()
 
   useEffect(() => {
     setLoading(true)
     setDetail(null)
+    setExternal(undefined)
     fetchPlant(plant.id)
       .then(setDetail)
       .catch(() => {})
       .finally(() => setLoading(false))
+    loadExternalPlantInfo(plant).then(setExternal)
   }, [plant.id])
 
   return (
@@ -39,9 +42,16 @@ export default function PlantDetail({ plant, onClose }: Props) {
         {loading && <p className="py-8 text-center text-sm text-gray-400">Загрузка…</p>}
         {detail && (
           <div className="space-y-5">
+            {external?.thumbnailUrl && <img src={external.thumbnailUrl} alt={`Иллюстрация: ${plant.name_la}`} className="h-48 w-full rounded-lg object-cover" />}
             <Row label="Семейство" value={detail.family} />
             <Row label="Жизненная форма" value={detail.life_form} />
             {detail.distribution_text && <Row label="Ареал" value={detail.distribution_text} />}
+
+            <div className={`rounded-lg border px-3 py-2 text-xs ${detail.validation.status === 'complete' ? 'border-forest-200 bg-forest-50 text-forest-800' : 'border-amber-200 bg-amber-50 text-amber-900'}`}>
+              <strong>{detail.validation.status === 'complete' ? 'Локальная проверка полноты' : 'Требует проверки'}</strong>
+              <p className="mt-1">Это контроль заполненности и повторов в локальном каталоге, не подтверждение медицинской эффективности.</p>
+              {detail.validation.flags.length > 0 && <ul className="mt-1 list-disc pl-4">{detail.validation.flags.map(flag => <li key={flag}>{flag}</li>)}</ul>}
+            </div>
 
             <TagSection label="Сырьё" items={detail.raw_materials.map(r => r.name)} color="bg-amber-50 text-amber-700" />
             <TagSection label="Применение" items={detail.applications.map(a => a.code)} color="bg-blue-50 text-blue-700" />
@@ -54,6 +64,15 @@ export default function PlantDetail({ plant, onClose }: Props) {
                 <p className="text-sm text-gray-600">{detail.notes}</p>
               </div>
             )}
+            {external && <div className="border-t border-gray-100 pt-4">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Внешние материалы</p>
+              {external.extract && <p className="mb-3 text-sm leading-6 text-gray-600">{external.extract}</p>}
+              <div className="flex flex-wrap gap-2 text-xs">
+                <a className="rounded bg-gray-100 px-2.5 py-1.5 text-gray-700 hover:bg-gray-200" href={external.wikipediaUrl} target="_blank" rel="noreferrer">Wikipedia</a>
+                <a className="rounded bg-gray-100 px-2.5 py-1.5 text-gray-700 hover:bg-gray-200" href={external.wikimediaSearchUrl} target="_blank" rel="noreferrer">Изображения Wikimedia</a>
+              </div>
+              <p className="mt-2 text-[11px] text-gray-400">{external.notice}</p>
+            </div>}
           </div>
         )}
       </div>

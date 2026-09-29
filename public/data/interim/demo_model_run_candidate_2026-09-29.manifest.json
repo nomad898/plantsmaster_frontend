@@ -1,0 +1,305 @@
+{
+  "experiment_id": "technical-demo-models-candidate-2026-09-29",
+  "status": "technical_demo_only/model_readiness blocked",
+  "input": {
+    "path": "data/interim/demo_training_dataset_candidate_2026-09-29.csv",
+    "sha256": "868fb314605272bc618639b74bb5a46455c9a4655fd84fd8255e908cf876b3f8",
+    "rows": 6243,
+    "manifest_path": "data/metadata/demo_training_dataset_candidate_2026-09-29.json",
+    "manifest_sha256": "ed2107f67f7696878f49534763b882117ba1391ebb2403949f59b4137de80a04",
+    "manifest_artifact_id": "demo-training-dataset-candidate-2026-09-29"
+  },
+  "features": [
+    "tmax_mean_monthly_candidate",
+    "ppt_mean_monthly_candidate"
+  ],
+  "models": {
+    "logistic_regression": {
+      "preprocessing": "StandardScaler fitted within each training fold",
+      "random_state": 20260929,
+      "threshold": 0.5
+    },
+    "random_forest": {
+      "n_estimators": 200,
+      "random_state": 20260929,
+      "n_jobs": 1,
+      "threshold": 0.5
+    }
+  },
+  "fold_assignments": {
+    "column": "fold_id",
+    "folds": {
+      "fold_0": 2000,
+      "fold_1": 1747,
+      "fold_2": 893,
+      "fold_3": 835,
+      "fold_4": 768
+    },
+    "method": "pre-saved technical spatial holdout; each fold is held out once"
+  },
+  "metrics": {
+    "logistic_regression": {
+      "overall": {
+        "n": 6243,
+        "positive_count": 3903,
+        "negative_count": 2340,
+        "accuracy": 0.837738266858882,
+        "balanced_accuracy": 0.8275292838513437,
+        "confusion_matrix_labels_0_1": [
+          [
+            1841,
+            499
+          ],
+          [
+            514,
+            3389
+          ]
+        ],
+        "roc_auc": 0.8348616339392666,
+        "average_precision": 0.8284875084004117
+      },
+      "by_fold": {
+        "fold_0": {
+          "n": 2000,
+          "positive_count": 1449,
+          "negative_count": 551,
+          "accuracy": 0.878,
+          "balanced_accuracy": 0.8455070710258905,
+          "confusion_matrix_labels_0_1": [
+            [
+              426,
+              125
+            ],
+            [
+              119,
+              1330
+            ]
+          ],
+          "roc_auc": 0.8469624836704456,
+          "average_precision": 0.8898514353805608
+        },
+        "fold_1": {
+          "n": 1747,
+          "positive_count": 1355,
+          "negative_count": 392,
+          "accuracy": 0.8769318832283916,
+          "balanced_accuracy": 0.8517697115746667,
+          "confusion_matrix_labels_0_1": [
+            [
+              316,
+              76
+            ],
+            [
+              139,
+              1216
+            ]
+          ],
+          "roc_auc": 0.8791117554032682,
+          "average_precision": 0.9446950082729709
+        },
+        "fold_2": {
+          "n": 893,
+          "positive_count": 454,
+          "negative_count": 439,
+          "accuracy": 0.8174692049272116,
+          "balanced_accuracy": 0.8170601988901488,
+          "confusion_matrix_labels_0_1": [
+            [
+              348,
+              91
+            ],
+            [
+              72,
+              382
+            ]
+          ],
+          "roc_auc": 0.80993045869166,
+          "average_precision": 0.7438930989159694
+        },
+        "fold_3": {
+          "n": 835,
+          "positive_count": 374,
+          "negative_count": 461,
+          "accuracy": 0.7437125748502994,
+          "balanced_accuracy": 0.7388814133423041,
+          "confusion_matrix_labels_0_1": [
+            [
+              362,
+              99
+            ],
+            [
+              115,
+              259
+            ]
+          ],
+          "roc_auc": 0.749411300706439,
+          "average_precision": 0.6469198863807476
+        },
+        "fold_4": {
+          "n": 768,
+          "positive_count": 271,
+          "negative_count": 497,
+          "accuracy": 0.76953125,
+          "balanced_accuracy": 0.7640418154684565,
+          "confusion_matrix_labels_0_1": [
+            [
+              389,
+              108
+            ],
+            [
+              69,
+              202
+            ]
+          ],
+          "roc_auc": 0.7632139701678706,
+          "average_precision": 0.5866367750303725
+        }
+      }
+    },
+    "random_forest": {
+      "overall": {
+        "n": 6243,
+        "positive_count": 3903,
+        "negative_count": 2340,
+        "accuracy": 0.7325004004485023,
+        "balanced_accuracy": 0.7595357285979885,
+        "confusion_matrix_labels_0_1": [
+          [
+            2030,
+            310
+          ],
+          [
+            1360,
+            2543
+          ]
+        ],
+        "roc_auc": 0.869003188430552,
+        "average_precision": 0.9053304934120129
+      },
+      "by_fold": {
+        "fold_0": {
+          "n": 2000,
+          "positive_count": 1449,
+          "negative_count": 551,
+          "accuracy": 0.811,
+          "balanced_accuracy": 0.8256999319888928,
+          "confusion_matrix_labels_0_1": [
+            [
+              473,
+              78
+            ],
+            [
+              300,
+              1149
+            ]
+          ],
+          "roc_auc": 0.917546865664912,
+          "average_precision": 0.9582195548125831
+        },
+        "fold_1": {
+          "n": 1747,
+          "positive_count": 1355,
+          "negative_count": 392,
+          "accuracy": 0.5529479107040641,
+          "balanced_accuracy": 0.6574177272384969,
+          "confusion_matrix_labels_0_1": [
+            [
+              332,
+              60
+            ],
+            [
+              721,
+              634
+            ]
+          ],
+          "roc_auc": 0.8192192559680699,
+          "average_precision": 0.9275815023702815
+        },
+        "fold_2": {
+          "n": 893,
+          "positive_count": 454,
+          "negative_count": 439,
+          "accuracy": 0.8197088465845465,
+          "balanced_accuracy": 0.8208056957643022,
+          "confusion_matrix_labels_0_1": [
+            [
+              389,
+              50
+            ],
+            [
+              111,
+              343
+            ]
+          ],
+          "roc_auc": 0.8972885914122004,
+          "average_precision": 0.8948854528093872
+        },
+        "fold_3": {
+          "n": 835,
+          "positive_count": 374,
+          "negative_count": 461,
+          "accuracy": 0.725748502994012,
+          "balanced_accuracy": 0.7110066467920237,
+          "confusion_matrix_labels_0_1": [
+            [
+              393,
+              68
+            ],
+            [
+              161,
+              213
+            ]
+          ],
+          "roc_auc": 0.7875694549166541,
+          "average_precision": 0.7639427400967341
+        },
+        "fold_4": {
+          "n": 768,
+          "positive_count": 271,
+          "negative_count": 497,
+          "accuracy": 0.8424479166666666,
+          "balanced_accuracy": 0.8220578081032319,
+          "confusion_matrix_labels_0_1": [
+            [
+              443,
+              54
+            ],
+            [
+              67,
+              204
+            ]
+          ],
+          "roc_auc": 0.8734139152256715,
+          "average_precision": 0.814524928769964
+        }
+      }
+    }
+  },
+  "predictions": {
+    "path": "data/interim/demo_model_predictions_candidate_2026-09-29.csv",
+    "sha256": "5d9b35164e5ddf3c71a2806f2c389743f7e977431744aa412839cd1816563ca1",
+    "rows": 12486
+  },
+  "checks": {
+    "feature_completeness": "passed",
+    "fold_holdout_predictions": "passed",
+    "preprocessing_fit_on_training_folds_only": "passed",
+    "target_semantics": "blocked: target=0 is background_candidate_not_pseudo_absence",
+    "model_readiness": "blocked: candidate labels, predictors, boundary and folds are not approved"
+  },
+  "failed_checks": [
+    "scientific_model_readiness_not_approved",
+    "target_0_is_not_confirmed_absence_or_approved_pseudo_absence",
+    "spatial_fold_design_is_technical_scaffolding_only"
+  ],
+  "environment_limitations": [
+    "Candidate background points are not confirmed absences or approved pseudo-absences.",
+    "Candidate boundary, climate control year, grid, predictors and spatial folds are not approved for scientific inference.",
+    "Elevation was excluded because it is missing outside the downloaded DEM tile.",
+    "Metrics describe technical holdout behavior only and must not be reported as ecological model performance."
+  ],
+  "environment": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0"
+  }
+}
