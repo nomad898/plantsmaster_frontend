@@ -1,0 +1,99 @@
+{
+  "created_utc": "2026-11-20T03:29:01+00:00",
+  "script": "plantsmaster/scripts/export_json.py",
+  "inputs": {
+    "book": {
+      "path": "data/book.md",
+      "sha256": "9cd7e578f8901b63830c3c0a9fc37918b508467dd410d11c8d38c9d00ab51271"
+    },
+    "catalog_id_registry": {
+      "path": "data/metadata/plant_catalog_ids.csv",
+      "sha256": "532e1c50e338a014cd8fb2c28e78083dd40ea270330954a0d988620b09c388f9"
+    }
+  },
+  "code_sha256": {
+    "plantsmaster/scripts/export_json.py": "b2455f549192d5a1a63e9cb589b0ecf9f68eeff8062d3b79897240dec38f7c7b",
+    "plantsmaster/scripts/parser.py": "80b7de55e0fce1d4be5e5507555468277cda74ee70f3ab5ed487a2cdb468c863",
+    "plantsmaster/scripts/catalog_ids.py": "9c2616c42c21139d26c94cad83c70644e09ea4f67b9308067113155b91585450"
+  },
+  "outputs": {
+    "plants.json": "15e6299125a98d09d8ef9c9e6383cb01d06b798e36fee70ff39b1d7c951d8ce8",
+    "taxonomy.json": "1ed558036da8841b96c39e0ad820d7d4915e0858a9ba8c21192948aad836da1d"
+  },
+  "counts": {
+    "records": 1371,
+    "families": 131,
+    "records_without_family": 0,
+    "records_without_life_form": 221,
+    "records_without_distribution_text": 221
+  },
+  "catalog_ids": {
+    "new": [],
+    "retired": []
+  },
+  "duplicate_name_la": [
+    {
+      "name_la": "Hemerocallis lilio-asphodelus",
+      "catalog_ids": [
+        731,
+        739
+      ]
+    },
+    {
+      "name_la": "Hippuris vulgaris",
+      "catalog_ids": [
+        732,
+        740
+      ]
+    },
+    {
+      "name_la": "Huperzia selago",
+      "catalog_ids": [
+        733,
+        741
+      ]
+    },
+    {
+      "name_la": "Hydrocharis morsus-ranae",
+      "catalog_ids": [
+        734,
+        742
+      ]
+    },
+    {
+      "name_la": "Hypecoum lactiflorum",
+      "catalog_ids": [
+        736,
+        744
+      ]
+    },
+    {
+      "name_la": "Hypecoum parviflorum",
+      "catalog_ids": [
+        745,
+        746
+      ]
+    },
+    {
+      "name_la": "Myriophyllum spicatum",
+      "catalog_ids": [
+        730,
+        738
+      ]
+    },
+    {
+      "name_la": "Ribes turbinatum",
+      "catalog_ids": [
+        729,
+        737
+      ]
+    },
+    {
+      "name_la": "Vallisneria spiralis",
+      "catalog_ids": [
+        735,
+        743
+      ]
+    }
+  ]
+}
